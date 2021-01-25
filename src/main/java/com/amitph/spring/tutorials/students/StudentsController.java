@@ -3,6 +3,7 @@ package com.amitph.spring.tutorials.students;
 import com.amitph.spring.tutorials.students.entity.Student;
 import com.amitph.spring.tutorials.students.entity.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -40,32 +41,42 @@ public class StudentsController {
 
     @PutMapping("/students/{id}")
     public void putStudent(@PathVariable long id, @RequestBody StudentDto studentDto) {
-        Student student = studentRepository.findById(id).orElseThrow(StudentNotFoundException::new);
-
-        boolean updateRequired = false;
-
-        if (studentDto.getFirstName() != null && studentDto.getFirstName().trim().length() > 0) {
-            student.setFirstName(studentDto.getFirstName().trim());
-            updateRequired = true;
-        }
-
-        if (studentDto.getLastName() != null && studentDto.getLastName().trim().length() > 0) {
-            student.setFirstName(studentDto.getFirstName().trim());
-            updateRequired = true;
-        }
-
-        if (studentDto.getYear() >= 0) {
-            student.setYear(studentDto.getYear());
-            updateRequired = true;
-        }
-
-        if (updateRequired = true) {
-            studentRepository.save(student);
-        }
+        Student student = new Student();
+        student.setStudent_id(id);
+        student.setFirstName(studentDto.getFirstName());
+        student.setLastName(studentDto.getLastName());
+        student.setYear(studentDto.getYear());
+        studentRepository.save(student);
     }
 
     @DeleteMapping("/students/{id}")
     public void deleteStudent(@PathVariable long id) {
         studentRepository.deleteById(id);
+    }
+
+    @PatchMapping("/students/{id}")
+    public void patchResource(@PathVariable long id, @RequestBody StudentDto studentDto) {
+        Student student = studentRepository.findById(id).orElseThrow(StudentNotFoundException::new);
+
+        boolean needUpdate = false;
+
+        if (StringUtils.hasLength(studentDto.getFirstName())) {
+            student.setFirstName(studentDto.getFirstName());
+            needUpdate = true;
+        }
+
+        if (StringUtils.hasLength(studentDto.getLastName())) {
+            student.setLastName(studentDto.getLastName());
+            needUpdate = true;
+        }
+
+        if (studentDto.getYear() > 0) {
+            student.setYear(studentDto.getYear());
+            needUpdate = true;
+        }
+
+        if (needUpdate) {
+            studentRepository.save(student);
+        }
     }
 }
