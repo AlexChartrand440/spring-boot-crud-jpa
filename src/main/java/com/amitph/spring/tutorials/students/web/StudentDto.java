@@ -1,4 +1,4 @@
-package com.amitph.spring.tutorials.students;
+package com.amitph.spring.tutorials.students.web;
 
 import com.amitph.spring.tutorials.students.entity.Student;
 import lombok.Data;

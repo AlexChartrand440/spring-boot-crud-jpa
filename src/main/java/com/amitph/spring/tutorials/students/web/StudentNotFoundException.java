@@ -1,4 +1,4 @@
-package com.amitph.spring.tutorials.students;
+package com.amitph.spring.tutorials.students.web;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 
